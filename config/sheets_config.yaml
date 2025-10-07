@@ -1,0 +1,38 @@
+# Configuração das abas para escadas NR-12
+avaliacoes_escadas:
+  - id_avaliacao
+  - data_avaliacao
+  - local_instalacao
+  - tipo_escada
+  - altura_total
+  - num_degraus
+  - altura_degrau
+  - profundidade_degrau
+  - largura
+  - inclinacao
+  - formula_blondel
+  - status_conformidade
+  - conformidade_percentual
+  - tem_plataforma
+  - tem_guarda_corpo
+  - observacoes
+  - grafico_drive_id
+  - foto_drive_id
+  - data_criacao
+
+projetos_escadas:
+  - id_projeto
+  - data_criacao
+  - nome_projeto
+  - local_instalacao
+  - altura_total
+  - num_degraus
+  - altura_degrau
+  - profundidade_degrau
+  - largura
+  - inclinacao
+  - formula_blondel
+  - num_plataformas
+  - status_projeto
+  - grafico_drive_id
+  - observacoes

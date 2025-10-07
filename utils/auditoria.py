@@ -1,0 +1,1 @@
+def log_action(action, details): pass
