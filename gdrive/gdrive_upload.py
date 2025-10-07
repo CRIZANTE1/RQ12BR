@@ -169,7 +169,8 @@ class GoogleDriveUploader:
             file = self.drive_service.files().create(body=file_metadata, media_body=media, fields='id,webViewLink').execute()
             return file.get('webViewLink')
         finally:
-            os.remove(tmp_path) # Garante que o arquivo temporário seja removido
+            if os.path.exists(tmp_path):
+                os.remove(tmp_path) # Garante que o arquivo temporário seja removido
 
     def upload_image_and_get_direct_link(self, image_file, novo_nome=None):
         """Faz upload de uma imagem, torna-a pública e retorna um link de visualização direta."""
@@ -190,4 +191,5 @@ class GoogleDriveUploader:
             
             return f"https://drive.google.com/uc?export=view&id={file_id}"
         finally:
-            os.remove(tmp_path)
+            if os.path.exists(tmp_path):
+                os.remove(tmp_path)

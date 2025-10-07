@@ -22,16 +22,18 @@ class EscadasGDriveManager:
             foto_drive_id = None
             
             if grafico_path:
-                grafico_drive_id = self.uploader.upload_file(
-                    open(grafico_path, 'rb'),
-                    f"grafico_{avaliacao_data['id']}.png"
-                )
+                with open(grafico_path, 'rb') as f:
+                    grafico_drive_id = self.uploader.upload_file(
+                        f,
+                        f"grafico_{avaliacao_data['id']}.png"
+                    )
             
             if foto_path:
-                foto_drive_id = self.uploader.upload_file(
-                    open(foto_path, 'rb'),
-                    f"foto_{avaliacao_data['id']}.png"
-                )
+                with open(foto_path, 'rb') as f:
+                    foto_drive_id = self.uploader.upload_file(
+                        f,
+                        f"foto_{avaliacao_data['id']}.png"
+                    )
             
             # Preparar linha para a planilha
             row = [
@@ -73,10 +75,11 @@ class EscadasGDriveManager:
             # Upload do gráfico
             grafico_drive_id = None
             if grafico_path:
-                grafico_drive_id = self.uploader.upload_file(
-                    open(grafico_path, 'rb'),
-                    f"projeto_{projeto_data['id']}.png"
-                )
+                with open(grafico_path, 'rb') as f:
+                    grafico_drive_id = self.uploader.upload_file(
+                        f,
+                        f"projeto_{projeto_data['id']}.png"
+                    )
             
             # Preparar linha para a planilha
             row = [

@@ -106,7 +106,7 @@ def mostrar_referencias_visuais():
                     caption="Escada com plataforma intermediária", 
                     use_container_width=True)
             
-            st.image("https.ciser.com.br/wp-content/uploads/2021/01/escada-industrial-nr12-exemplo.jpg", 
+            st.image("https://www.ciser.com.br/wp-content/uploads/2021/01/escada-industrial-nr12-exemplo.jpg", 
                     caption="Escada industrial com degraus antiderrapantes", 
                     use_container_width=True)
     

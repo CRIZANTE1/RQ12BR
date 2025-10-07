@@ -45,6 +45,14 @@ def normalize_dataframe_columns(df, expected_columns):
         # Se o DataFrame está vazio, cria com as colunas esperadas
         return pd.DataFrame(columns=expected_columns)
     
+    # ADICIONAR: Validar se as colunas essenciais existem
+    essential_cols = ['email', 'nome', 'status']
+    missing_essential = [col for col in essential_cols if col not in df.columns]
+    
+    if missing_essential:
+        st.error(f"Colunas essenciais ausentes na planilha: {missing_essential}")
+        return pd.DataFrame(columns=expected_columns)
+    
     # Adiciona colunas faltantes com valores padrão
     for col in expected_columns:
         if col not in df.columns:
