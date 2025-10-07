@@ -135,11 +135,11 @@ def mostrar_referencias_visuais():
         with col1:
             st.markdown("""
             ### Parâmetros Principais
-            - **Altura do degrau (h)**: 150mm a 200mm (ideal: 180mm)
-            - **Profundidade do degrau (p)**: Mínimo 250mm (ideal: 280mm)
-            - **Fórmula de Blondel**: 2h + p = 630mm a 640mm
-            - **Largura mínima**: 800mm
-            - **Inclinação máxima**: 38°
+            - **Altura do degrau (h)**: 150mm a 250mm (ideal: 180mm)
+            - **Profundidade do degrau (p)**: Mínimo 150mm (ideal: 280mm)
+            - **Fórmula NR-12**: 600 ≤ g + 2h ≤ 660
+            - **Largura mínima**: 600mm (Item 11.a)
+            - **Inclinação**: 20° a 45° (Figura 1)
             """)
             
             st.markdown("""

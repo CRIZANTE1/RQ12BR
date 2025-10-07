@@ -129,7 +129,6 @@ def avaliar_escada_existente(calculadora, gerenciador_historico):
     
     with col_botoes[0]:
         if st.button("Avaliar Conformidade"):
-            # Set a flag in session state to indicate that the button has been pressed
             st.session_state.avaliacao_realizada = True
 
             # Calcular número de degraus
@@ -159,6 +158,10 @@ def avaliar_escada_existente(calculadora, gerenciador_historico):
             st.session_state.resultados_protecoes = resultados_protecoes
             st.session_state.resultados_plataforma = resultados_plataforma
             
+            # Calcular fórmula NR-12 (g + 2h)
+            formula_nr12 = profundidade_degrau + (2 * altura_degrau)
+            inclinacao = np.degrees(np.arctan(altura_degrau/profundidade_degrau))
+            
             # Criar DataFrame para exibir os resultados
             medidas_dict = {
                 'Medida': [
@@ -167,7 +170,7 @@ def avaliar_escada_existente(calculadora, gerenciador_historico):
                     'Altura do Degrau',
                     'Profundidade do Degrau',
                     'Largura da Escada',
-                    'Fórmula de Blondel (2h + p)',
+                    'Fórmula NR-12 (g + 2h)',
                     'Inclinação da Escada',
                     'Número de Degraus',
                     'Altura do Guarda-corpo',
@@ -179,8 +182,8 @@ def avaliar_escada_existente(calculadora, gerenciador_historico):
                     f"{altura_degrau:.1f} mm",
                     f"{profundidade_degrau:.1f} mm",
                     f"{largura:.1f} mm",
-                    f"{(2 * altura_degrau) + profundidade_degrau:.1f} mm",
-                    f"{np.degrees(np.arctan(altura_degrau/profundidade_degrau)):.1f}°",
+                    f"{formula_nr12:.1f} mm",
+                    f"{inclinacao:.1f}°",
                     f"{num_degraus}",
                     f"{altura_guarda_corpo:.1f} mm",
                     f"{altura_rodape:.1f} mm"
@@ -188,11 +191,11 @@ def avaliar_escada_existente(calculadora, gerenciador_historico):
                 'Valor Mínimo': [
                     '-',
                     '-',
-                    '150',  # CORRIGIDO (não '0')
-                    '150',  # CORRIGIDO (não '250')
-                    '600',  # CORRIGIDO (não '800')
-                    '600',  # CORRIGIDO (não '630')
-                    '20°',  # CORRIGIDO (não '30°')
+                    '150',
+                    '150',
+                    '600',
+                    '600',
+                    '20°',
                     '-',
                     '1100',
                     '200'
@@ -203,35 +206,35 @@ def avaliar_escada_existente(calculadora, gerenciador_historico):
                     '250',
                     '-',
                     '-',
-                    '660',  # CORRIGIDO (não '640')
-                    '45°',  # CORRIGIDO (não '38°')
+                    '660',
+                    '45°',
                     '-',
                     '-',
                     '-'
                 ],
                 'Status': [
-                    '✅',  # Local de instalação sempre ok
-                    '✅',  # Altura total sempre ok
+                    '✅',
+                    '✅',
                     '✅' if resultados_avaliacao['altura_degrau_ok'] else '❌',
                     '✅' if resultados_avaliacao['profundidade_ok'] else '❌',
                     '✅' if resultados_avaliacao['largura_ok'] else '❌',
                     '✅' if resultados_avaliacao['formula_blondel_ok'] else '❌',
                     '✅' if resultados_avaliacao['inclinacao_ok'] else '❌',
-                    '✅',  # Número de degraus sempre ok
+                    '✅',
                     '✅' if resultados_protecoes['guarda_corpo_ok'] else '❌',
                     '✅' if resultados_protecoes['rodape_ok'] else '❌'
                 ],
                 'Recomendação de Ajuste': [
-                    '-',  # Local de instalação sempre ok
-                    '-',  # Altura total sempre ok
-                    f'Ajustar a altura do degrau para {altura_degrau:.1f} mm para atender à fórmula de Blondel. Valor ideal: 635 mm.' if not resultados_avaliacao['altura_degrau_ok'] else '-',
-                    f'Aumentar a profundidade do degrau para pelo menos 250 mm. Valor atual: {profundidade_degrau:.1f} mm.' if not resultados_avaliacao['profundidade_ok'] else '-',
-                    f'Aumentar a largura da escada para pelo menos 800 mm. Valor atual: {largura:.1f} mm.' if not resultados_avaliacao['largura_ok'] else '-',
-                    f'Ajustar a altura do degrau ou a profundidade para atender à fórmula de Blondel (2h + p = 635 mm). Valor atual: {2*altura_degrau + profundidade_degrau:.1f} mm.' if not resultados_avaliacao['formula_blondel_ok'] else '-',
-                    f'Ajustar a inclinação para estar entre 30° e 38°. Inclinação atual: {np.degrees(np.arctan(altura_degrau/profundidade_degrau)):.1f}°.' if not resultados_avaliacao['inclinacao_ok'] else '-',
-                    '-',  # Número de degraus sempre ok
-                    f'Aumentar a altura do guarda-corpo para pelo menos 1100 mm. Valor atual: {altura_guarda_corpo:.1f} mm.' if not resultados_protecoes['guarda_corpo_ok'] else '-',
-                    f'Aumentar a altura do rodapé para pelo menos 200 mm. Valor atual: {altura_rodape:.1f} mm.' if not resultados_protecoes['rodape_ok'] else '-'
+                    '-',
+                    '-',
+                    f'Ajustar para o intervalo de 150-250mm. Valor atual: {altura_degrau:.1f} mm.' if not resultados_avaliacao['altura_degrau_ok'] else '-',
+                    f'Aumentar para pelo menos 150mm. Valor atual: {profundidade_degrau:.1f} mm.' if not resultados_avaliacao['profundidade_ok'] else '-',
+                    f'Aumentar para pelo menos 600mm (NR-12 Item 11.a). Valor atual: {largura:.1f} mm.' if not resultados_avaliacao['largura_ok'] else '-',
+                    f'Ajustar dimensões para 600 ≤ g + 2h ≤ 660 (NR-12 Item 11.g). Valor atual: {formula_nr12:.1f} mm.' if not resultados_avaliacao['formula_blondel_ok'] else '-',
+                    f'Ajustar para 20° a 45° (NR-12 Figura 1). Valor atual: {inclinacao:.1f}°.' if not resultados_avaliacao['inclinacao_ok'] else '-',
+                    '-',
+                    f'Aumentar para pelo menos 1100mm. Valor atual: {altura_guarda_corpo:.1f} mm.' if not resultados_protecoes['guarda_corpo_ok'] else '-',
+                    f'Aumentar para pelo menos 200mm. Valor atual: {altura_rodape:.1f} mm.' if not resultados_protecoes['rodape_ok'] else '-'
                 ]
             }
 
@@ -249,8 +252,8 @@ def avaliar_escada_existente(calculadora, gerenciador_historico):
                 ])
                 medidas_dict['Valor Mínimo'].extend([
                     '-',
-                    '800',
-                    '800'
+                    '600',
+                    '600'
                 ])
                 medidas_dict['Valor Máximo'].extend([
                     '3000',
@@ -263,9 +266,9 @@ def avaliar_escada_existente(calculadora, gerenciador_historico):
                     '✅' if resultados_plataforma['comprimento_plataforma_ok'] else '❌'
                 ])
                 medidas_dict['Recomendação de Ajuste'].extend([
-                    '-',
-                    'Aumentar largura da plataforma para pelo menos 800mm' if not resultados_plataforma['largura_plataforma_ok'] else '-',
-                    'Aumentar comprimento da plataforma para pelo menos 800mm' if not resultados_plataforma['comprimento_plataforma_ok'] else '-'
+                    'Verificar posicionamento conforme NR-12 Item 11.e' if not resultados_plataforma['altura_plataforma_ok'] else '-',
+                    'Aumentar largura para pelo menos 600mm' if not resultados_plataforma['largura_plataforma_ok'] else '-',
+                    'Aumentar comprimento para pelo menos 600mm' if not resultados_plataforma['comprimento_plataforma_ok'] else '-'
                 ])
             
             # Criar DataFrame
@@ -313,17 +316,14 @@ def avaliar_escada_existente(calculadora, gerenciador_historico):
             
             # Adicionar guarda-corpo
             if altura_guarda_corpo > 0:
-                # Desenhar guarda-corpo ao longo da escada
                 x_coords = [i * profundidade_degrau for i in range(num_degraus + 1)]
                 y_coords = [min(i * altura_degrau, altura_total) for i in range(num_degraus + 1)]
                 
-                # Linha superior do guarda-corpo
                 for i in range(len(x_coords) - 1):
                     ax.plot([x_coords[i], x_coords[i+1]], 
                            [y_coords[i] + altura_guarda_corpo, y_coords[i+1] + altura_guarda_corpo], 
                            'k-', linewidth=2)
                 
-                # Postes verticais do guarda-corpo
                 for i in range(len(x_coords)):
                     ax.plot([x_coords[i], x_coords[i]], 
                            [y_coords[i], y_coords[i] + altura_guarda_corpo], 
@@ -331,33 +331,30 @@ def avaliar_escada_existente(calculadora, gerenciador_historico):
             
             ax.set_xlabel("Projeção (mm)")
             ax.set_ylabel("Altura (mm)")
-            ax.set_title("Escada Completa com Plataformas")
+            ax.set_title("Escada Completa")
             ax.grid(True, linestyle="--", alpha=0.7)
             
-            # Adiciona a inclinação da escada no gráfico
-            inclinacao = np.degrees(np.arctan(altura_degrau/profundidade_degrau))
             ax.text(0.05, 0.95, f"Inclinação: {inclinacao:.1f}°", transform=ax.transAxes, fontsize=12,
                     verticalalignment='top', bbox=dict(boxstyle="round", facecolor="wheat", alpha=0.5))
             
-            # Ajustar limites do gráfico
             ax.set_xlim(0, (num_degraus + 1) * profundidade_degrau)
-            ax.set_ylim(0, altura_total * 1.2)  # Dar espaço para o guarda-corpo
+            ax.set_ylim(0, altura_total * 1.2)
             
             plt.tight_layout()
             st.pyplot(fig)
             
-            # Salvar a figura na sessão para uso posterior
             st.session_state.figura_escada = fig
             
-            # Verificar se precisa de plataformas adicionais
+            # Avisos
             if num_plataformas_necessarias > 0 and not tem_plataforma:
-                st.warning(f"⚠️ Para esta altura de escada ({altura_total:.1f} mm), são necessárias {num_plataformas_necessarias} plataformas de descanso.")
+                st.warning(f"⚠️ Para esta altura ({altura_total:.1f} mm), são necessárias {num_plataformas_necessarias} plataformas de descanso (NR-12 Item 11.e).")
             
-            # Aviso de inclinação excessiva
-            if inclinacao > 38:
-                st.error(f"⚠️ A inclinação da escada ({inclinacao:.1f}°) é maior que o máximo permitido de 38°. A escada está muito íngreme e pode ser perigosa.")
+            if inclinacao > 45:
+                st.error(f"⚠️ A inclinação ({inclinacao:.1f}°) excede o máximo de 45° (NR-12 Figura 1). A escada está muito íngreme!")
+            elif inclinacao < 20:
+                st.warning(f"⚠️ A inclinação ({inclinacao:.1f}°) está abaixo do mínimo de 20° (NR-12 Figura 1).")
             
-            # Após a avaliação, habilitar o botão de salvar
+            # Habilitar salvamento
             st.session_state.avaliacao_realizada = True
             st.session_state.dados_avaliacao = {
                 'local': local_instalacao if local_instalacao else "Não informado",
@@ -370,14 +367,12 @@ def avaliar_escada_existente(calculadora, gerenciador_historico):
             }
     
     with col_botoes[1]:
-        # Botão de salvar só aparece após a avaliação
         if 'avaliacao_realizada' in st.session_state and st.session_state.avaliacao_realizada:
             if st.button("Salvar no Histórico"):
                 plano_atual = get_effective_user_plan()
                 
                 # Verificar limite do plano básico
                 if plano_atual == 'basico':
-                    from datetime import datetime
                     mes_atual = datetime.now().strftime("%m/%Y")
                     avaliacoes_mes = [
                         a for a in st.session_state.get('historico_avaliacoes', []) 
@@ -386,33 +381,28 @@ def avaliar_escada_existente(calculadora, gerenciador_historico):
                     
                     if len(avaliacoes_mes) >= 5:
                         st.error("🚫 Limite de 5 avaliações mensais atingido (Plano Básico)")
-                        st.info("💎 Faça upgrade para o Plano Pro para avaliações ilimitadas!")
+                        st.info("💎 Faça upgrade para o Plano Pro!")
                         st.stop()
                 
-                # Criar diretórios se não existirem
                 gerenciador_historico.criar_diretorios()
-                
-                # Gerar ID único para esta avaliação
                 avaliacao_id = str(uuid.uuid4())
-                
-                # Salvar o gráfico da escada
                 grafico_path = f"images/grafico_{avaliacao_id}.png"
                 
-                # ... código existente para salvar gráfico ...
+                if 'figura_escada' in st.session_state:
+                    st.session_state.figura_escada.savefig(grafico_path)
                 
-                # Processar a foto da escada
                 foto_path = None
                 if st.session_state.dados_avaliacao['foto_escada'] is not None:
                     foto_path = f"images/foto_{avaliacao_id}.png"
                     with open(foto_path, "wb") as f:
                         f.write(st.session_state.dados_avaliacao['foto_escada'].getvalue())
                 
-                # Calcular dados para o Drive
+                # Calcular conformidade
                 itens_ok = sum(1 for s in st.session_state.dados_avaliacao['status_itens'] if s == '✅')
                 total_itens = len(st.session_state.dados_avaliacao['status_itens'])
                 conformidade = (itens_ok / total_itens) * 100 if total_itens > 0 else 0
                 
-                # Preparar dados da avaliação
+                # Preparar dados para Google Drive
                 avaliacao_drive_data = {
                     'id': avaliacao_id,
                     'data': datetime.now().strftime("%d/%m/%Y %H:%M"),
@@ -423,8 +413,8 @@ def avaliar_escada_existente(calculadora, gerenciador_historico):
                     'altura_degrau': altura_degrau,
                     'profundidade_degrau': profundidade_degrau,
                     'largura': largura,
-                    'inclinacao': np.degrees(np.arctan(altura_degrau/profundidade_degrau)),
-                    'formula_blondel': 2*altura_degrau + profundidade_degrau,
+                    'inclinacao': inclinacao,
+                    'formula_blondel': formula_nr12,
                     'status_conformidade': 'Conforme' if conformidade == 100 else 'Não conforme',
                     'conformidade_percentual': conformidade,
                     'tem_plataforma': tem_plataforma,
@@ -432,23 +422,21 @@ def avaliar_escada_existente(calculadora, gerenciador_historico):
                     'observacoes': ''
                 }
                 
-                # Salvar no Google Drive (se disponível)
+                # Salvar no Google Drive
                 try:
                     gdrive_manager = EscadasGDriveManager()
                     success, grafico_id, foto_id = gdrive_manager.salvar_avaliacao(
-                        avaliacao_drive_data, 
-                        grafico_path, 
-                        foto_path
+                        avaliacao_drive_data, grafico_path, foto_path
                     )
                     
                     if success:
                         st.success("✅ Avaliação salva no Google Drive!")
                     else:
-                        st.warning("⚠️ Avaliação salva localmente, mas não foi possível sincronizar com o Drive")
+                        st.warning("⚠️ Salvo localmente, mas não sincronizado com Drive")
                 except Exception as e:
                     st.warning(f"⚠️ Erro ao salvar no Drive: {e}. Salvo apenas localmente.")
                 
-                # Criar registro local da avaliação
+                # Registro local
                 avaliacao = {
                     'id': avaliacao_id,
                     'local': st.session_state.dados_avaliacao['local'],
@@ -462,15 +450,12 @@ def avaliar_escada_existente(calculadora, gerenciador_historico):
                     'foto_path': foto_path
                 }
                 
-                # Adicionar ao histórico na sessão
                 if 'historico_avaliacoes' not in st.session_state:
                     st.session_state.historico_avaliacoes = []
                 
                 st.session_state.historico_avaliacoes.append(avaliacao)
-                
-                # Salvar histórico em JSON (backup local)
                 gerenciador_historico.salvar_historico_json(st.session_state.historico_avaliacoes)
                 
                 st.success("✅ Avaliação salva com sucesso!")
                 st.session_state.avaliacao_realizada = False
-                st.rerun() 
+                st.rerun()
