@@ -1,1 +1,12 @@
-streamlit-js-eval
+streamlit==1.31.0
+pandas==2.1.4
+numpy==1.26.3
+matplotlib==3.8.2
+google-auth==2.27.0
+google-auth-oauthlib==1.2.0
+google-api-python-client==2.116.0
+Pillow==10.2.0
+pytz==2024.1
+pyyaml==6.0.1
+streamlit-lottie==0.0.5
+altair==5.2.0
