@@ -1,0 +1,7 @@
+streamlit
+sqlalchemy
+supabase
+pandas
+matplotlib
+numpy
+httpx
