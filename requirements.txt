@@ -5,3 +5,4 @@ pandas
 matplotlib
 numpy
 httpx
+psycopg2-binary
